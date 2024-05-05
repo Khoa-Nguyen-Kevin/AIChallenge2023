@@ -1,0 +1,16 @@
+*.zip
+/assets/
+/CLIP_concepts/
+/clip-features-vit-b32
+/concepts
+/for_publish 
+/keyframes
+/map-keyframes
+/objects
+/metadata
+/objects_filtered
+/objects-b2 
+/spare_concepts
+/submission
+/zips
+unsplash-25k-photos-embeddings.pkl

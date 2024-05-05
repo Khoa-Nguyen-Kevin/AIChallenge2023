@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="main-web">
+        <div id="home">
+            <div class="home__querryInput">
+                <div class="container">
+                    <!-- <h1 class="home__heading">AI Challenge 2023 </h1> -->
+                    <div class="querryInput__content">
+                        <div class="querryInput__content__heading">
+                            <h2>Text to Image AI</h2>
+                            <textarea name="querryInput" id="querryInput" cols="30" rows="4">input your Text</textarea>
+
+                            <div class="btn__container">
+                                <button id='clear_btn_js' class="clear">Clear</button>
+                                <button id='submit_btn_js' class="submit">Submit</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="home__querryOutput">
+                <div class="container">
+                    <div class="querryOutput__content__heading">
+                        <h2>Output</h2>
+                    </div>
+                    <div id='querryOutput__content__content_js' class="querryOutput__content__content">
+                        <div class="img__content">
+                            <img src="https://i.pinimg.com/originals/ae/8a/c2/ae8ac2fa217d23aadcc913989fcc34a2.png"
+                                alt="">
+                        </div>
+                        <div class="img__content">
+                            <img src="https://i.pinimg.com/originals/ae/8a/c2/ae8ac2fa217d23aadcc913989fcc34a2.png"
+                                alt="">
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        clear__button = document.querySelector('#clear_btn_js')
+        submit__button = document.querySelector('#submit_btn_js')
+
+        output_img_Container = document.querySelector('#querryOutput__content__content_js')
+
+        input_space = document.querySelector('#querryInput')
+        value = input_space.value
+
+        clear__button.onclick = () => {
+            input_space.innerHTML = ''
+            input_space.value = ''
+            output_img_Container.innerHTML = ''
+            for (let i = 0; i < 2; i++) {
+                output_img_Container.innerHTML += `<div class = "img__content">
+                <img src="https://i.pinimg.com/originals/ae/8a/c2/ae8ac2fa217d23aadcc913989fcc34a2.png" alt="">
+            </div>`}
+        }
+
+        submit__button.onclick = () => {
+            output_img_Container.innerHTML = ''
+
+
+            input_space = document.querySelector('#querryInput')
+            value = input_space.value
+
+            for (let i = 0; i < 10; i++) {
+                output_img_Container.innerHTML += `<div class = "img__content">
+                <div class="container">
+                    <div class="loader"></div>
+                </div>
+            </div>`
+            }
+
+            console.log(`Requesting - send "${value}" to server`)
+
+            var count = 1;
+
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+
+                if (this.readyState == 4 && this.status == 200) {
+
+                    console.log('Successfull responding')
+
+                    const dataUpdate = JSON.parse(this.responseText);
+
+                    output_img_Container.innerHTML = ''
+
+                    listURL = dataUpdate['url']
+
+                    listURL.forEach((url) => {
+                        console.log('---')
+                        console.log(url[0])
+                        arr = url[0].split('/')
+                        name = arr[arr.length - 2] + ', ' + arr[arr.length - 1]
+
+                        output_img_Container.innerHTML = output_img_Container.innerHTML + `<div class="img__content">
+                            <img class = '${url[1]}' src="${url[0]}"
+                                alt="AI_challenge">
+                            <div class="name__img">${name}</div>
+                        </div>`
+                        count = count + 1;
+                    })
+
+
+                    output_img_Container.querySelectorAll('img').forEach((img) => {
+                        img.onclick = () => {
+                            window.open(img.className, "_blank");
+                        }
+                    })
+
+                }
+            };
+
+            xhttp.open("POST", '/query?input=' + value, true);
+            xhttp.send(value);
+        }
+
+
+
+
+
+    </script>
+</body>
+
+</html>
